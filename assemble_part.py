@@ -3,8 +3,6 @@
 import argparse, subprocess
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont,ImageFilter
-import arabic_reshaper
-from bidi.algorithm import get_display
 
 def cmd(*args):
     subprocess.run(list(map(str,args)),check=True)
@@ -49,11 +47,9 @@ def main():
     font_path="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
     title=ImageFont.truetype(font_path,73)
     small=ImageFont.truetype(font_path,58)
-    def rtl(s):
-        return get_display(arabic_reshaper.reshape(s))
-    d.text((540,742),rtl("معركة كوريا الجوية"),font=title,anchor="mm",fill="white",stroke_width=2,stroke_fill="#111111")
-    d.text((540,849),rtl("كورساير ضد ميغ ١٥"),font=small,anchor="mm",fill="#F5D593")
-    d.text((540,958),rtl("الجزء "+str(a.part)),font=title,anchor="mm",fill="white")
+    d.text((540,742),"معركة كوريا الجوية",font=title,anchor="mm",direction="rtl",fill="white",stroke_width=2,stroke_fill="#111111")
+    d.text((540,849),"كورساير ضد ميغ ١٥",font=small,anchor="mm",direction="rtl",fill="#F5D593")
+    d.text((540,958),"الجزء "+str(a.part),font=title,anchor="mm",direction="rtl",fill="white")
     final=Image.alpha_composite(image.convert("RGBA"),overlay).convert("RGB")
     final.save(out/f"cover_part_{a.part}.jpg",quality=94)
     print(video)
