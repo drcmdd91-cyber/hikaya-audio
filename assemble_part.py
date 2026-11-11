@@ -40,7 +40,7 @@ def main():
     frame=out/"source_frame.jpg"
     cmd("ffmpeg","-y","-hide_banner","-loglevel","error",
         "-ss",str(a.start+min(12,a.duration/2)),"-i",a.source,
-        "-frames:v","1","-vf","scale=1080:1920:force_original_aspect_ratio=decrease,"
+        "-frames:v","1","-vf","scale=1080:1080:force_original_aspect_ratio=decrease,"
         "pad=1080:1080:(ow-iw)/2:(oh-ih)/2:black",frame)
     image=Image.open(frame).convert("RGB")
     overlay=Image.new("RGBA",image.size,(0,0,0,0))
