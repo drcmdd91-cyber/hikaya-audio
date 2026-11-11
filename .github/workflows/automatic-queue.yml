@@ -1,0 +1,54 @@
+name: Automatic licensed footage queue
+on:
+  schedule:
+    - cron: '30 16 * * *' # 19:30 Asia/Riyadh (UTC+3)
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  process-one:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check for approved queue item
+        id: check
+        run: |
+          python - <<'PY'
+          import json,os
+          q=json.load(open('queue.json'))
+          pending=any(i.get('rights_confirmed') is True and i.get('url') and i.get('status','pending')=='pending' for i in q.get('items',[]))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('pending='+str(pending).lower()+'\n')
+          PY
+      - name: Install dependencies
+        if: steps.check.outputs.pending == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --upgrade pip
+          pip install 'demucs==4.0.1' 'yt-dlp>=2025.1.0'
+      - name: Process approved URL
+        if: steps.check.outputs.pending == 'true'
+        run: python queue_runner.py
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.pending == 'true'
+        with:
+          name: background-and-video-${{ github.run_number }}
+          path: |
+            output/stems/htdemucs/original/no_vocals.mp3
+            output/video_no_english_narrator.mp4
+          retention-days: 7
+      - name: Mark item processed
+        if: steps.check.outputs.pending == 'true'
+        run: |
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git config user.name 'github-actions[bot]'
+          git add queue.json
+          git commit -m 'Mark approved item processed' || true
+          git push
