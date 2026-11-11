@@ -3,10 +3,11 @@
     {
       "id": "yarnhub-korea-1952-folmar-01",
       "title": "Yarnhub Korean War: Jesse Folmar F4U Corsair vs MiG-15",
-      "url": "https://storage.googleapis.com/vidiq-user-videos/b0699ae6-ae75-4174-988e-8643894efa04/d325cc70-aa48-4b32-8a16-9c0a96021ba1.mp4?GoogleAccessId=ai-proxy-20261001%40studious-pen-429.vid.io.iam.gserviceaccount.com&Expires=1795032060&Signature=L8j259XCXQxNFgd%2BvaBBIH8l37w9l4L7BkZRSfAXqEEBXOTNuY3bRZy5X86%2Bz2m2V2JMWEQK7DQ5fCRKZJqsX1JBe47aquhXbfc5OIbEka6lNmn7YkByyTGyU0tog3tLu4IXNq70CccEoz%2BVlozRnFrLE5dVtFqbZ7V%2BeTQ1XuzfxAIC9q0VhEUs%2Ff4Q6mULejEtq9BLKylZthFJdZnogH1HSMpyWctnNsi8sX0%2Bvq7VLJbQXIatj%2B5pAapoaqYJhGnYnc0xlVY%2BRXyOrz67E7m0kHMrfROfDiZMdIOd4HOjxpoHS9jGI1rASntq9s8JiZaWyPlNpGRowpe1y27Lug%3D%3D",
       "rights_confirmed": true,
-      "status": "pending",
-      "notes": "Temporary signed media link from user's already-imported Yarnhub video for audio separation test only. Do not publish without licensing verification and audio QC."
+      "status": "audio_separated_review_pending",
+      "notes": "Original audio successfully separated in GitHub run 43092526915. Assembly is being tested. Rights to redistribute still need verification; do not publish without it.",
+      "audio_artifact_run": 43092526915,
+      "source_page": "https://youtu.be/izwUcX2UMuY"
     }
   ]
 }
