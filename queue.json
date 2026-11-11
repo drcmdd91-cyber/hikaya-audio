@@ -1,3 +1,12 @@
 {
-  "items": []
+  "items": [
+    {
+      "id": "yarnhub-korea-1952-folmar-01",
+      "title": "Yarnhub Korean War: Jesse Folmar F4U Corsair vs MiG-15",
+      "url": "https://youtu.be/izwUcX2UMuY",
+      "rights_confirmed": true,
+      "status": "pending",
+      "notes": "User asserted rights to Yarnhub material; this stage is local audio-only processing. Do NOT publish without documentary evidence of redistribution rights. Preserve battle effects and inspect residual manually."
+    }
+  ]
 }
