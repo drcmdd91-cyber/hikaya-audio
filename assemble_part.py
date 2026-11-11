@@ -26,14 +26,14 @@ def main():
         "crop=1080:1080,boxblur=20:2[blur];"
         "[fg]scale=1080:1080:force_original_aspect_ratio=decrease[main];"
         "[blur][main]overlay=(W-w)/2:(H-h)/2:shortest=1[v];"
-        "[0:a]volume=0.55[bg];"
-        "[1:a]volume=1.15,adelay=3000|3000[voice];"
-        "[bg][voice]amix=inputs=2:duration=first:dropout_transition=1[a]"
+        "[0:a]volume=0.84[bg];"
+        "[1:a]volume=1.05,adelay=3000|3000[voice];"
+        "[bg][voice]amix=inputs=2:duration=first:dropout_transition=1:normalize=0,alimiter=limit=0.94[a]"
     )
     cmd("ffmpeg","-y","-hide_banner","-loglevel","error","-ss",a.start,
         "-t",a.duration,"-i",a.source,"-i",a.narration,
         "-filter_complex",filtergraph,"-map","[v]","-map","[a]",
-        "-c:v","libx264","-preset","veryfast","-crf","21","-pix_fmt","yuv420p",
+        "-c:v","libx264","-preset","medium","-crf","19","-pix_fmt","yuv420p",
         "-c:a","aac","-b:a","192k","-movflags","+faststart","-t",a.duration,video)
     frame=out/"source_frame.jpg"
     cmd("ffmpeg","-y","-hide_banner","-loglevel","error",
@@ -43,13 +43,17 @@ def main():
     image=Image.open(frame).convert("RGB")
     overlay=Image.new("RGBA",image.size,(0,0,0,0))
     d=ImageDraw.Draw(overlay)
-    d.rectangle((0,650,1080,1080),fill=(0,0,0,194))
+    # Cinematic high-contrast independent cover.
+    d.rectangle((0,610,1080,1080),fill=(3,10,22,208))
+    d.rectangle((0,604,1080,616),fill=(218,167,69,240))
+    d.rectangle((32,675,47,972),fill=(218,167,69,230))
+    d.rectangle((50,1012,1030,1020),fill=(218,167,69,220))
     font_path="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
     title=ImageFont.truetype(font_path,73)
     small=ImageFont.truetype(font_path,58)
-    d.text((540,742),"معركة كوريا الجوية",font=title,anchor="mm",direction="rtl",fill="white",stroke_width=2,stroke_fill="#111111")
-    d.text((540,849),"كورساير ضد ميغ ١٥",font=small,anchor="mm",direction="rtl",fill="#F5D593")
-    d.text((540,958),"الجزء "+str(a.part),font=title,anchor="mm",direction="rtl",fill="white")
+    d.text((540,714),"معركة كوريا الجوية",font=title,anchor="mm",direction="rtl",fill="white",stroke_width=2,stroke_fill="#111111")
+    d.text((540,832),"كورساير ضد ميغ ١٥",font=small,anchor="mm",direction="rtl",fill="#F5D593")
+    d.text((540,949),"الجزء "+str(a.part),font=title,anchor="mm",direction="rtl",fill="white")
     final=Image.alpha_composite(image.convert("RGBA"),overlay).convert("RGB")
     final.save(out/f"cover_part_{a.part}.jpg",quality=94)
     print(video)
