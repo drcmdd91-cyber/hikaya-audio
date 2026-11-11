@@ -1,0 +1,46 @@
+name: Assemble Arabic pilot and cover
+on:
+  workflow_run:
+    workflows: ["Automatic licensed footage queue"]
+    types: [completed]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  assemble:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          pip install pillow arabic-reshaper python-bidi
+      - name: Download audio separation artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          mkdir -p input
+          gh run download "$RUN_ID" --repo "${{ github.repository }}" --dir input
+          find input -type f
+      - name: Download already-produced Arabic narration
+        run: |
+          curl --fail --location --retry 2 --output narration1.mp3 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=e138c2947e1d4430878af70d01e57139.mp3'
+      - name: Assemble first episode and its independent cover
+        run: |
+          VIDEO="$(find input -type f -name video_no_english_narrator.mp4 | head -n1)"
+          test -n "$VIDEO" && test -s "$VIDEO"
+          python assemble_part.py --source "$VIDEO" --narration narration1.mp3 --part 1 --start 0 --duration 124
+      - uses: actions/upload-artifact@v4
+        with:
+          name: episode1-arabic-plus-cover
+          path: |
+            deliverables/part_1.mp4
+            deliverables/cover_part_1.jpg
+          retention-days: 7
