@@ -36,7 +36,7 @@ jobs:
         run: |
           VIDEO="$(find input -type f -name video_no_english_narrator.mp4 | head -n1)"
           test -n "$VIDEO" && test -s "$VIDEO"
-          python assemble_part.py --source "$VIDEO" --narration narration1.mp3 --part 1 --start 0 --duration 124
+          python assemble_part.py --source "$VIDEO" --narration narration1.mp3 --part 1 --start 0 --duration 90
       - uses: actions/upload-artifact@v4
         with:
           name: episode1-arabic-plus-cover
