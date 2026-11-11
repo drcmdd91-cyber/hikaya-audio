@@ -1,0 +1,52 @@
+name: Render remaining Korea Arabic square parts
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/korea-parts-2-4.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  render-parts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install video and cover dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          pip install pillow
+      - name: Download existing separated-video artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p input
+          gh run download 43092526915 --repo "${{ github.repository }}" --dir input
+          find input -type f
+      - name: Download preproduced Arabic narrations
+        run: |
+          curl --fail --location --retry 3 --output voice1.mp3 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=e138c2947e1d4430878af70d01e57139.mp3'
+          curl --fail --location --retry 3 --output voice2.mp3 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=e1af7e874da046b18943106432559831.mp3'
+          curl --fail --location --retry 3 --output voice3.mp3 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=8bcd5953cf6a4d9ebf96f3e594d76cbe.mp3'
+          curl --fail --location --retry 3 --output voice4.mp3 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=134ba761b27b4ae3a2aa06b3c0600b5b.mp3'
+      - name: Produce four 90-second 1080 square pieces with independent covers
+        run: |
+          VIDEO="$(find input -type f -name video_no_english_narrator.mp4 | head -n1)"
+          test -s "$VIDEO"
+          python assemble_part.py --source "$VIDEO" --narration voice1.mp3 --part 1 --start 0 --duration 90
+          python assemble_part.py --source "$VIDEO" --narration voice2.mp3 --part 2 --start 90 --duration 90
+          python assemble_part.py --source "$VIDEO" --narration voice3.mp3 --part 3 --start 180 --duration 90
+          python assemble_part.py --source "$VIDEO" --narration voice4.mp3 --part 4 --start 270 --duration 90
+      - name: Upload revised Arabic parts and cinematic numbered covers
+        uses: actions/upload-artifact@v4
+        with:
+          name: korea-arabic-square-parts-1-to-4
+          path: |
+            deliverables/part_*.mp4
+            deliverables/cover_part_*.jpg
+          retention-days: 7
