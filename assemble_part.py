@@ -27,7 +27,7 @@ def main():
         "[fg]scale=1080:1080:force_original_aspect_ratio=decrease[main];"
         "[blur][main]overlay=(W-w)/2:(H-h)/2:shortest=1[v];"
         "[0:a]volume=0.84[bg];"
-        "[1:a]volume=1.05,adelay=3000|3000[voice];"
+        "[1:a]volume=1.05,adelay=1200|1200[voice];"
         "[bg][voice]amix=inputs=2:duration=first:dropout_transition=1:normalize=0,alimiter=limit=0.94[a]"
     )
     cmd("ffmpeg","-y","-hide_banner","-loglevel","error","-ss",a.start,
