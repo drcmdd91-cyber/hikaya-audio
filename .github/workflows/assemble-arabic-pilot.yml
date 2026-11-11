@@ -1,5 +1,9 @@
 name: Assemble Arabic pilot and cover
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/assemble-arabic-pilot.yml']
+  workflow_dispatch:
   workflow_run:
     workflows: ["Automatic licensed footage queue"]
     types: [completed]
@@ -8,7 +12,7 @@ permissions:
   actions: read
 jobs:
   assemble:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -24,7 +28,7 @@ jobs:
       - name: Download audio separation artifact
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ID: 43092526915
         run: |
           mkdir -p input
           gh run download "$RUN_ID" --repo "${{ github.repository }}" --dir input
@@ -44,12 +48,3 @@ jobs:
             deliverables/part_1.mp4
             deliverables/cover_part_1.jpg
           retention-days: 7
-      - name: Expose the finished, reviewable video and cover as release assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
-        run: |
-          gh release create "korea-pilot-$RUN_ID" deliverables/part_1.mp4 deliverables/cover_part_1.jpg \
-            --repo "${{ github.repository }}" \
-            --title "Korea aerial battle — Arabic part 1" \
-            --notes "Automated pilot; review sound, synchronization and rights before external publication."
