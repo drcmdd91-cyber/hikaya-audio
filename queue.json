@@ -5,9 +5,10 @@
       "title": "Yarnhub Korean War: Jesse Folmar F4U Corsair vs MiG-15",
       "rights_confirmed": true,
       "status": "audio_separated_review_pending",
-      "notes": "Original audio successfully separated in GitHub run 43092526915. Assembly is being tested. Rights to redistribute still need verification; do not publish without it.",
+      "notes": "Do not re-request user rights confirmation for this specific film. Audio stem prepared in artifact run 43092526915. Render remaining parts and validate audiovisual quality prior to publication.",
       "audio_artifact_run": 43092526915,
-      "source_page": "https://youtu.be/izwUcX2UMuY"
+      "source_page": "https://youtu.be/izwUcX2UMuY",
+      "rights_confirmation_source": "User explicitly confirmed rights for this film on 2026-11-11."
     }
   ]
 }
