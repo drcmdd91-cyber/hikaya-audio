@@ -44,3 +44,12 @@ jobs:
             deliverables/part_1.mp4
             deliverables/cover_part_1.jpg
           retention-days: 7
+      - name: Expose the finished, reviewable video and cover as release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          gh release create "korea-pilot-$RUN_ID" deliverables/part_1.mp4 deliverables/cover_part_1.jpg \
+            --repo "${{ github.repository }}" \
+            --title "Korea aerial battle — Arabic part 1" \
+            --notes "Automated pilot; review sound, synchronization and rights before external publication."
