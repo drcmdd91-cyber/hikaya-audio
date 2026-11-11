@@ -24,7 +24,7 @@ jobs:
           q=json.load(open('queue.json'))
           pending=any(i.get('rights_confirmed') is True and i.get('url') and i.get('status','pending')=='pending' for i in q.get('items',[]))
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:
-              f.write('pending='+str(pending).lower()+'\n')
+              print('pending='+str(pending).lower(),file=f)
           PY
       - name: Install dependencies
         if: steps.check.outputs.pending == 'true'
