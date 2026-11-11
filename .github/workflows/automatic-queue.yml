@@ -1,5 +1,8 @@
 name: Automatic licensed footage queue
 on:
+  push:
+    branches: [main]
+    paths: ['queue.json']
   schedule:
     - cron: '30 16 * * *' # 19:30 Asia/Riyadh (UTC+3)
   workflow_dispatch:
