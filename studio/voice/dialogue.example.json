@@ -1,0 +1,39 @@
+{
+  "project_id": "voice-demo",
+  "lines": [
+    {
+      "id": "L001",
+      "speaker": "narrator",
+      "text": "وَفِي تِلْكَ اللَّحْظَةِ، تَغَيَّرَ كُلُّ شَيْءٍ.",
+      "emotion": "suspense",
+      "delivery": "low then rising intensity",
+      "scene_id": "S001",
+      "effects": [],
+      "reviewed_pronunciation": false
+    },
+    {
+      "id": "L002",
+      "speaker": "jace",
+      "text": "سُعُودُ! اُنْظُرْ إِلَى الْأَعْلَى!",
+      "emotion": "urgency",
+      "delivery": "shout",
+      "scene_id": "S002",
+      "effects": [
+        "radio"
+      ],
+      "reviewed_pronunciation": false
+    },
+    {
+      "id": "L003",
+      "speaker": "saud",
+      "text": "أَرَاهَا! إِنَّهَا تَقْتَرِبُ!",
+      "emotion": "fear",
+      "delivery": "fast and breathless",
+      "scene_id": "S002",
+      "effects": [
+        "radio"
+      ],
+      "reviewed_pronunciation": false
+    }
+  ]
+}
