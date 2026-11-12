@@ -1,0 +1,20 @@
+{
+  "project_id": "REPLACE_ME",
+  "title_ar": "",
+  "source_uri": "",
+  "source_rights_verified": false,
+  "aspect_ratio": "9:16",
+  "script_complete": false,
+  "parts": [
+    {
+      "id": 1,
+      "cover": "",
+      "output": ""
+    }
+  ],
+  "qa": {
+    "visual_review_passed": false,
+    "audio_review_passed": false,
+    "publication_verified": false
+  }
+}
