@@ -1,0 +1,12 @@
+{
+  "queries": [
+    "open source video generation",
+    "Blender procedural animation",
+    "open source Arabic text to speech",
+    "open source video editing automation",
+    "scientific animation Python",
+    "automatic subtitles Arabic"
+  ],
+  "max_results_per_query": 5,
+  "min_stars": 25
+}
