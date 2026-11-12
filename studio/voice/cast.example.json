@@ -1,0 +1,39 @@
+{
+  "language": "ar",
+  "voices": [
+    {
+      "id": "narrator",
+      "role": "narrator",
+      "style": "cinematic documentary Arabic MSA",
+      "emotions": [
+        "calm",
+        "suspense",
+        "urgency",
+        "relief"
+      ],
+      "engine_voice_id": null
+    },
+    {
+      "id": "jace",
+      "role": "character",
+      "style": "adult pilot clear Arabic",
+      "emotions": [
+        "urgency",
+        "fear",
+        "relief"
+      ],
+      "engine_voice_id": null
+    },
+    {
+      "id": "saud",
+      "role": "character",
+      "style": "adult pilot distinct voice",
+      "emotions": [
+        "urgency",
+        "calm",
+        "relief"
+      ],
+      "engine_voice_id": null
+    }
+  ]
+}
