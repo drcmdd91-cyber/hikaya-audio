@@ -1,0 +1,36 @@
+name: Studio innovation scout
+on:
+  schedule:
+    - cron: '15 5 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search open source tools
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python studio/innovation/scout.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: innovation-scout-report
+          path: studio/innovation/reports/
+          retention-days: 14
+      - name: Create review issue for new discoveries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json,os
+          p=json.load(open("studio/innovation/reports/latest.json"))
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:
+              f.write(f"Found {len(p['candidates'])} candidates; errors {len(p['errors'])}. Review report artifact before installing.\n")
+          PY
+          if ! gh issue list --state open --search "مدير الابتكار: مراجعة الأدوات" --json title --jq '.[].title' | grep -q 'مدير الابتكار'; then
+            gh issue create --title "مدير الابتكار: مراجعة الأدوات والقوالب المكتشفة" --body "تقرير البحث محفوظ ضمن artifact باسم innovation-scout-report في تشغيل workflow الأخير. افحص الترخيص والأمان ودعم العربية والاختبارات قبل أي دمج. هذا تقرير اكتشاف فقط."
+          fi
