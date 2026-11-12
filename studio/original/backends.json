@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "render_modes": [
+    {
+      "id": "storyboard",
+      "status": "implemented_manifest_only",
+      "cost": "no paid API"
+    },
+    {
+      "id": "local_image_diffusion",
+      "status": "candidate_not_installed",
+      "requires": "GPU and compatible licensed model"
+    },
+    {
+      "id": "local_video_generation",
+      "status": "candidate_not_installed",
+      "requires": "high VRAM GPU and video model"
+    },
+    {
+      "id": "local_tts",
+      "status": "candidate_not_installed",
+      "requires": "Arabic-capable licensed speech model"
+    },
+    {
+      "id": "ffmpeg_edit",
+      "status": "existing_renderer_unverified_end_to_end",
+      "requires": "FFmpeg"
+    }
+  ],
+  "policy": {
+    "no_paid_subscription_without_approval": true,
+    "do_not_claim_quality_without_review": true
+  }
+}
