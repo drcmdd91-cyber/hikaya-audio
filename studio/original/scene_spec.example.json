@@ -1,0 +1,29 @@
+{
+  "project_id": "original-film-demo",
+  "title_ar": "مشهد تجريبي",
+  "aspect_ratio": "9:16",
+  "shots": [
+    {
+      "shot_id": "S001",
+      "duration_seconds": 6,
+      "location": "سماء أوروبا عام 1943",
+      "time_of_day": "فجر",
+      "subjects": [
+        "fighter_a"
+      ],
+      "action_ar": "طائرة مقاتلة تعبر الغيوم",
+      "camera": "tracking wide shot",
+      "style": "cinematic documentary realism",
+      "continuity": [
+        "fighter_a markings remain identical"
+      ],
+      "narration_ar": "عند الفجر، بدأت المهمة.",
+      "dialogue": [],
+      "reference_assets": [],
+      "sound_design": [
+        "engine ambience"
+      ],
+      "visual_review_required": true
+    }
+  ]
+}
