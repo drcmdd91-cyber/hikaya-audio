@@ -33,6 +33,11 @@ jobs:
           curl -fL --retry 4 -o n3.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=c5b8f01ebd6b40b6bee214cec313a6f8.wav'
           printf "file 'n1.wav'\nfile 'n2.wav'\nfile 'n3.wav'\n" > audio.txt
           ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i audio.txt -af "atempo=0.953" -ar 48000 -ac 2 narration.wav
+          curl -fL --retry 4 -o folmar_question.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/24c7556125674f17bc2c4904074827e5/id=f237d144965c4bc6b2625d6743390f69.wav'
+          curl -fL --retry 4 -o daniels_answer.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=87ea5cf605f747f487a9bc2023a3a981.wav'
+          curl -fL --retry 4 -o folmar_bandits.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/24c7556125674f17bc2c4904074827e5/id=49ace9399d0d41bf9a77cd6f19c3816a.wav'
+          ffmpeg -y -hide_banner -loglevel error -i narration.wav -i folmar_question.wav -i daniels_answer.wav -i folmar_bandits.wav -filter_complex "[0:a]volume=0.95[n];[1:a]highpass=f=350,lowpass=f=3200,volume=2.3,adelay=48000|48000[q];[2:a]highpass=f=350,lowpass=f=3200,volume=2.3,adelay=54000|54000[d];[3:a]highpass=f=350,lowpass=f=3200,volume=2.3,adelay=91000|91000[b];[n][q][d][b]amix=inputs=4:duration=first:normalize=0[a]" -map "[a]" -ar 48000 -ac 2 narration_radio.wav
+          mv narration_radio.wav narration.wav
       - name: Render four contiguous vertical video parts
         run: |
           SRC="$(cat source_path.txt)"
