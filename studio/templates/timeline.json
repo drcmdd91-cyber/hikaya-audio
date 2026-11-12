@@ -1,0 +1,16 @@
+{
+  "project_id": "REPLACE_ME",
+  "cues": [
+    {
+      "part_id": 1,
+      "source_start": null,
+      "source_end": null,
+      "arabic_text": "",
+      "speaker_id": "",
+      "audio_path": "",
+      "visual_event": "",
+      "visual_evidence": "",
+      "verified_by_viewing": false
+    }
+  ]
+}
