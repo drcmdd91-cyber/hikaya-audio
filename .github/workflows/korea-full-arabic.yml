@@ -1,0 +1,48 @@
+name: Full Korea Arabic four-part production
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/korea-full-arabic.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-noto-core
+          pip install pillow arabic-reshaper python-bidi
+      - name: Retrieve original footage
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p input output
+          gh run download 43092526915 --repo "${{ github.repository }}" --dir input
+          find input -name video_no_english_narrator.mp4 -size +1M | head -n 1 > source_path.txt
+          test -s source_path.txt
+      - name: Retrieve faithful Arabic narration
+        run: |
+          curl -fL --retry 4 -o n1.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=a49ec478166649d5b95339f1548c1464.wav'
+          curl -fL --retry 4 -o n2.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=d90bfa7f799743eaaae9be534b0aed9b.wav'
+          curl -fL --retry 4 -o n3.wav 'https://resource2.heygen.ai/text_to_speech/86c720500b404584a403681de2affebc/dc4ee8e4f0bc4099ad5be2a8431ca556/id=c5b8f01ebd6b40b6bee214cec313a6f8.wav'
+          printf "file 'n1.wav'\nfile 'n2.wav'\nfile 'n3.wav'\n" > audio.txt
+          ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i audio.txt -af "atempo=0.953" -ar 48000 -ac 2 narration.wav
+      - name: Render four contiguous vertical video parts
+        run: |
+          SRC="$(cat source_path.txt)"
+          for N in 1 2 3 4; do
+            START=$(( (N-1)*124 ))
+            ffmpeg -y -hide_banner -loglevel error -ss "$START" -i "$SRC" -ss "$START" -i narration.wav -t 124 -filter_complex "[0:v]fps=24,scale=720:1050:force_original_aspect_ratio=increase,crop=720:1050,setsar=1,pad=720:1280:0:115:color=0x101923,drawbox=x=0:y=0:w=iw:h=115:color=0x14283a:t=fill,drawbox=x=0:y=1165:w=iw:h=115:color=0x14283a:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/noto/NotoSansArabic-Bold.ttf:text='دفتر الحكايات':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=24,drawtext=fontfile=/usr/share/fonts/truetype/noto/NotoSansArabic-Bold.ttf:text='الحرب الكورية - الجزء $N':fontcolor=0xffd166:fontsize=28:x=(w-text_w)/2:y=1195[v];[0:a]volume=0.24[bg];[1:a]volume=1.4[voice];[bg][voice]amix=inputs=2:duration=longest:weights='0.35 1'[a]" -map "[v]" -map "[a]" -c:v libx264 -preset veryfast -crf 26 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart "output/korea_full_part_${N}.mp4"
+          done
+          for F in output/*.mp4; do ffprobe -v error -show_entries format=duration -of default=nw=1 "$F"; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: korea-four-full-arabic-parts
+          path: output/*.mp4
+          retention-days: 7
